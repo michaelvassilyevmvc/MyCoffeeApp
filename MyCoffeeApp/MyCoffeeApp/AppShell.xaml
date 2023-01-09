@@ -81,13 +81,12 @@
         </ResourceDictionary>
     </Shell.Resources>
 
-    <!--
-        When the Flyout is visible this defines the content to display in the flyout.
-        FlyoutDisplayOptions="AsMultipleItems" will create a separate flyout item for each child element
-        https://docs.microsoft.com/dotnet/api/xamarin.forms.shellgroupitem.flyoutdisplayoptions?view=xamarin-forms
-    -->
+    
     <FlyoutItem Title="Equipment" Icon="icon_about.png">
         <ShellContent ContentTemplate="{DataTemplate local:CoffeeEquipmentPage}" Route="EquipmentPage" />
+    </FlyoutItem>
+    <FlyoutItem Title="Equipment - CV" Icon="icon_about.png">
+        <ShellContent ContentTemplate="{DataTemplate local:CoffeeEquipmentCVPage}" Route="EquipmentPageCV" />
     </FlyoutItem>
 
 </Shell>
