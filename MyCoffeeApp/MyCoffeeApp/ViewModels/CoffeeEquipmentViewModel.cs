@@ -3,16 +3,40 @@ using MvvmHelpers.Commands;
 using MyCoffeeApp.Models;
 using System.Linq;
 using System.Threading.Tasks;
-
+using Xamarin.Forms;
 
 namespace MyCoffeeApp.ViewModels
 {
     public class CoffeeEquipmentViewModel : ViewModelBase
     {
+        private Coffee previouslySelected;
+        private Coffee selectedCoffee;
+        public Coffee SelectedCoffee
+        {
+            get
+            {
+                return selectedCoffee;
+            }
+            set
+            {
+                if(value != null)
+                {
+                    Application.Current.MainPage.DisplayAlert("Selected", value.Name, "OK");
+                    previouslySelected = value;
+                    value = null;
+                }
+
+                selectedCoffee = value;
+                OnPropertyChanged();
+            }
+        }
+
+
         public ObservableRangeCollection<Coffee> Coffee { get; set; }
         public ObservableRangeCollection<Grouping<string, Coffee>> CoffeeGroups { get; }
 
         public AsyncCommand RefreshCommand { get; }
+        public AsyncCommand<Coffee> FavoriteCommand { get; }
         public CoffeeEquipmentViewModel()
         {
 
@@ -35,6 +59,7 @@ namespace MyCoffeeApp.ViewModels
             CoffeeGroups.Add(new Grouping<string, Coffee>("Yes Plz", Coffee.Take(2)));
 
             RefreshCommand = new AsyncCommand(Refresh);
+            FavoriteCommand = new AsyncCommand<Coffee>(Favorite);
         }
 
         async Task Refresh()
@@ -46,6 +71,14 @@ namespace MyCoffeeApp.ViewModels
             IsBusy = false;
         }
 
+        async Task Favorite(Coffee coffee)
+        {
+            if(coffee == null)
+            {
+                return;
+            }
 
+            await Application.Current.MainPage.DisplayAlert("Favorite", coffee.Name, "OK");
+        }
     }
 }

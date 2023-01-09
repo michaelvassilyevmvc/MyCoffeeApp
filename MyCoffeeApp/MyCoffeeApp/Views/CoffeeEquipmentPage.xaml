@@ -7,14 +7,14 @@
     xmlns:mvvm="clr-namespace:MvvmHelpers;assembly=MvvmHelpers"
     xmlns:viewmodels="clr-namespace:MyCoffeeApp.ViewModels"
     x:DataType="viewmodels:CoffeeEquipmentViewModel"
+    x:Name="CoffeePage"
     BackgroundColor="White">
     <ContentPage.BindingContext>
         <viewmodels:CoffeeEquipmentViewModel />
     </ContentPage.BindingContext>
 
     <ListView
-        ItemSelected="ListView_ItemSelected"
-        ItemTapped="ListView_ItemTapped"
+        SelectedItem="{Binding SelectedCoffee, Mode=TwoWay}"
         CachingStrategy="RecycleElement"
         BackgroundColor="Transparent"
         HasUnevenRows="True"
@@ -30,7 +30,11 @@
             <DataTemplate x:DataType="model:Coffee">
                 <ViewCell>
                     <ViewCell.ContextActions>
-                        <MenuItem Text="Favorite" Clicked="MenuItem_Clicked"/>
+                        <MenuItem 
+                            Text="Favorite" 
+                            Command="{Binding Source={x:Reference CoffeePage}, Path=BindingContext.FavoriteCommand}"
+                            CommandParameter="{Binding .}"
+                            />
                         <MenuItem Text="Delete" IsDestructive="True"/>
                     </ViewCell.ContextActions>
                     <Grid Padding="10">
@@ -47,6 +51,13 @@
                                         Text="{Binding Roaster}"
                                         VerticalOptions="Center" />
                                 </StackLayout>
+                                <Button 
+                                    Text="Favorite" 
+                                    Command="{Binding 
+                                    Source={RelativeSource AncestorType={x:Type viewmodels:CoffeeEquipmentViewModel}},
+                                    Path=FavoriteCommand}"
+                                    CommandParameter="{Binding .}"
+                                />
                             </StackLayout>
                         </Frame>
                     </Grid>
