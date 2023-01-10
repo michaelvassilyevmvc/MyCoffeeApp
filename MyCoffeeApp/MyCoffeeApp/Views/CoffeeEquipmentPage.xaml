@@ -6,12 +6,19 @@
     xmlns:model="clr-namespace:MyCoffeeApp.Models"
     xmlns:mvvm="clr-namespace:MvvmHelpers;assembly=MvvmHelpers"
     xmlns:viewmodels="clr-namespace:MyCoffeeApp.ViewModels"
+    xmlns:xct="http://xamarin.com/schemas/2020/toolkit"
     x:DataType="viewmodels:CoffeeEquipmentViewModel"
     x:Name="CoffeePage"
     BackgroundColor="White">
     <ContentPage.BindingContext>
         <viewmodels:CoffeeEquipmentViewModel />
     </ContentPage.BindingContext>
+
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <xct:ItemSelectedEventArgsConverter x:Key="ItemSelectedEventArgsConverter" />
+        </ResourceDictionary>
+    </ContentPage.Resources>
 
     <ListView
         SelectedItem="{Binding SelectedCoffee, Mode=TwoWay}"
@@ -26,6 +33,12 @@
         IsRefreshing="{Binding IsBusy, Mode=OneWay}"
         RefreshCommand="{Binding RefreshCommand}"
         RefreshControlColor="Red">
+        <ListView.Behaviors>
+            <xct:EventToCommandBehavior
+                EventName="ItemSelected"
+                Command="{Binding SelectedCommand}"                
+                EventArgsConverter="{StaticResource ItemSelectedEventArgsConverter}"/>
+        </ListView.Behaviors>
         <ListView.ItemTemplate>
             <DataTemplate x:DataType="model:Coffee">
                 <ViewCell>
@@ -67,7 +80,7 @@
         </ListView.Header>
         <ListView.Footer>
             <StackLayout Orientation="Horizontal" HorizontalOptions="Center">
-                <Button Text="Load More" Command="{Binding LoadMoreCommand}"/>
+                <Button Command="{Binding LoadMoreCommand}" Text="Load More" />
             </StackLayout>
         </ListView.Footer>
     </ListView>

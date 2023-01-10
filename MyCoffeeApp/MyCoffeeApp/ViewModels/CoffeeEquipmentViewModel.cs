@@ -18,18 +18,7 @@ namespace MyCoffeeApp.ViewModels
             {
                 return selectedCoffee;
             }
-            set
-            {
-                if(value != null)
-                {
-                    Application.Current.MainPage.DisplayAlert("Selected", value.Name, "OK");
-                    previouslySelected = value;
-                    value = null;
-                }
-
-                selectedCoffee = value;
-                OnPropertyChanged();
-            }
+            set => SetProperty(ref selectedCoffee, value);
         }
 
 
@@ -38,6 +27,7 @@ namespace MyCoffeeApp.ViewModels
 
         public AsyncCommand RefreshCommand { get; }
         public AsyncCommand<Coffee> FavoriteCommand { get; }
+        public AsyncCommand<object> SelectedCommand { get; }
         public Command LoadMoreCommand { get; }
         public Command DelayloadMoreCommand { get; }
         public Command ClearCommand { get; }
@@ -55,6 +45,7 @@ namespace MyCoffeeApp.ViewModels
 
             RefreshCommand = new AsyncCommand(Refresh);
             FavoriteCommand = new AsyncCommand<Coffee>(Favorite);
+            SelectedCommand = new AsyncCommand<object>(Selected);
             LoadMoreCommand = new Command(LoadMore);
             ClearCommand = new Command(Clear);
             DelayloadMoreCommand = new Command(DelayLoadMore);
@@ -106,12 +97,22 @@ namespace MyCoffeeApp.ViewModels
 
             LoadMore();
         }
-
-
         void Clear()
         {
             Coffee.Clear();
             CoffeeGroups.Clear();
+        }
+
+        async Task Selected(object args)
+        {
+            var coffee = args as Coffee; 
+            if(coffee == null)
+            {
+                return;
+            }
+
+            SelectedCoffee = null;
+            await Application.Current.MainPage.DisplayAlert("Selected", coffee.Name, "OK");
         }
     }
 }
