@@ -27,7 +27,7 @@ namespace MyCoffeeApp.ViewModels
 
         public AsyncCommand RefreshCommand { get; }
         public AsyncCommand<Coffee> FavoriteCommand { get; }
-        public AsyncCommand<object> SelectedCommand { get; }
+        public AsyncCommand<Coffee> SelectedCommand { get; }
         public Command LoadMoreCommand { get; }
         public Command DelayloadMoreCommand { get; }
         public Command ClearCommand { get; }
@@ -45,7 +45,7 @@ namespace MyCoffeeApp.ViewModels
 
             RefreshCommand = new AsyncCommand(Refresh);
             FavoriteCommand = new AsyncCommand<Coffee>(Favorite);
-            SelectedCommand = new AsyncCommand<object>(Selected);
+            SelectedCommand = new AsyncCommand<Coffee>(Selected);
             LoadMoreCommand = new Command(LoadMore);
             ClearCommand = new Command(Clear);
             DelayloadMoreCommand = new Command(DelayLoadMore);
@@ -103,9 +103,8 @@ namespace MyCoffeeApp.ViewModels
             CoffeeGroups.Clear();
         }
 
-        async Task Selected(object args)
+        async Task Selected(Coffee coffee)
         {
-            var coffee = args as Coffee; 
             if(coffee == null)
             {
                 return;
